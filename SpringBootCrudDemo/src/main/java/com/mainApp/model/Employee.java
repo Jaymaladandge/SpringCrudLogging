@@ -13,17 +13,19 @@ public class Employee {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	@Column(name="id")
+	private long empId;
 	
 	@Column
 	private String name;
 
-	public long getId() {
-		return id;
+	
+	public long getEmpId() {
+		return empId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setEmpId(long empId) {
+		this.empId = empId;
 	}
 
 	public String getName() {
@@ -36,7 +38,7 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", name=" + name + "]";
+		return "Employee [id=" + empId + ", name=" + name + "]";
 	}
 	
 	

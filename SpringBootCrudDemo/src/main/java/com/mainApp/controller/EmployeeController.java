@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mainApp.SpringBootCrudApp;
 import com.mainApp.model.Employee;
+import com.mainApp.model.PFProcess;
 import com.mainApp.service.EmployeeService;
+import com.mainApp.service.OrganizationService;
 
 @RestController
 @RequestMapping("/app")
@@ -31,25 +33,31 @@ public class EmployeeController {
 	@Autowired
 	EmployeeService employeeService;
 
+	@Autowired
+	OrganizationService service;
+
 	@GetMapping("/emp")
 	public List<Employee> getAllEmployees() {
 		logger.trace("This is a TRACE message.");
-	    logger.debug("This is a DEBUG message.");
-	    logger.info("This is an INFO message.");
-	    logger.warn("This is a WARN message.");
-	    logger.error("You guessed it, an ERROR message.");
+		logger.debug("This is a DEBUG message.");
+		logger.info("This is an INFO message.");
+		logger.warn("This is a WARN message.");
+		logger.error("You guessed it, an ERROR message.");
 		return employeeService.getAllEmployees();
 	}
 
 	@PostMapping("/emp")
 	public Employee saveEmployee(@Valid @RequestBody Employee employee) {
-		return employeeService.saveEmployee(employee);
+		PFProcess pfProcess = new PFProcess();
+		pfProcess.setEmpId(employee.getEmpId());
+		pfProcess.setAmount(2000);
+		return service.joinOrganization(employee, pfProcess);
 	}
 
 	@GetMapping("/emp/{id}")
 	public Employee getEmpById(@PathVariable long id) {
-		logger.debug("Request {}",id);
-		logger.debug("Rsponse {}","Welcome to logs demo...........!!");
+		logger.debug("Request {}", id);
+		logger.debug("Rsponse {}", "Welcome to logs demo...........!!");
 		return employeeService.getEmployeeById(id);
 	}
 
@@ -60,7 +68,8 @@ public class EmployeeController {
 
 	@DeleteMapping("/emp/{id}")
 	public ResponseEntity<Employee> deleteEmployee(@PathVariable long id) {
-		employeeService.deleteEmployee(id);
+		Employee employee=employeeService.getEmployeeById(id);
+		service.leaveOrganization(employee);
 		return ResponseEntity.ok().build();
 	}
 
